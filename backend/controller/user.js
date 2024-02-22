@@ -141,7 +141,8 @@ router.post(
           new ErrorHandler("Please provide the correct information", 400)
         );
       }
-      sendToken(user, 201, res);
+    sendToken(user, 201, res);
+     
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -156,8 +157,9 @@ router.get(
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const user = await User.findById(req.user.id);
 
+      const user = await User.findById(req.user.id);
+    
       if (!user) {
         return next(new ErrorHandler("User doesn't exists", 400));
       }

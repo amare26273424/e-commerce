@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
   name:{
     type: String,
     required: [true, "Please enter your name!"],
@@ -14,12 +14,11 @@ const userSchema = new mongoose.Schema({
   password:{
     type: String,
     required: [true, "Please enter your password"],
-    minLength: [6, "Password should be greater than 4 characters"],
+    minLength: [6, "Password should be greater than 6 characters"],
     select: false,
   },
   avatar:{
-    type:String,
-    
+    type:String
  },
   phoneNumber:{
     type: Number,
@@ -48,19 +47,18 @@ const userSchema = new mongoose.Schema({
   ],
   role:{
     type: String,
-    default: "user",
+    default: "admin",
   },
  createdAt:{
   type: Date,
   default: Date.now(),
  },
- resetPasswordToken: String,
- resetPasswordTime: Date,
+
 });
 
 
 //  Hash password
-userSchema.pre("save", async function (next){
+adminSchema.pre("save", async function (next){
   if(!this.isModified("password")){
     next();
   }
@@ -69,15 +67,15 @@ userSchema.pre("save", async function (next){
 });
 
 // jwt token
-userSchema.methods.getJwtToken = function () {
+adminSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this._id}, process.env.JWT_SECRET_KEY,{
     expiresIn: process.env.JWT_EXPIRES,
   });
 };
 
 // compare password
-userSchema.methods.comparePassword = async function (enteredPassword) {
+adminSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("admin", adminSchema);
