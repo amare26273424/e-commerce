@@ -14,7 +14,7 @@ router.post(
   "/create-event",upload.array('images'),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      
+      console.log(req.body)
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
     
@@ -91,21 +91,21 @@ router.post(
 // );
 
 // get all products
-// router.get(
-//   "/get-all-products",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const products = await Product.find().sort({ createdAt: -1 });
-
-//       res.status(201).json({
-//         success: true,
-//         products,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error, 400));
-//     }
-//   })
-// );
+ router.get(
+   "/get-all-events",
+   catchAsyncErrors(async (req, res, next) => {
+     try {
+       const events = await Event.find().sort({ createdAt: -1 });
+    
+       res.status(201).json({
+         success: true,
+         events,
+       });
+     } catch (error) {
+       return next(new ErrorHandler(error, 400));
+     }
+   })
+ );
 
 // review for a product
 // router.put(

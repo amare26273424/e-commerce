@@ -23,6 +23,14 @@ const eventSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please enter your event price!"],
   },
+  start_Date: {
+    type: Date,
+    required: [true, "Please enter your event start date!"],
+  },
+  Finish_Date: {
+    type: Date,
+    required: [true, "Please enter your event finish date!"],
+  },
   stock: {
     type: Number,
     required: [true, "Please enter your event stock!"],
