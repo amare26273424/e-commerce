@@ -43,22 +43,22 @@ router.post(
   })
 );
 
-// get all products of a shop
-// router.get(
-//   "/get-all-products-shop/:id",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const products = await Product.find({ shopId: req.params.id });
-
-//       res.status(201).json({
-//         success: true,
-//         products,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error, 400));
-//     }
-//   })
-// );
+// get all events of a shop
+   router.get(
+     "/get-all-events-shop/:id",
+     catchAsyncErrors(async (req, res, next) => {
+       try {
+         const events = await Event.find({ shopId: req.params.id });
+        console.log(events)
+         res.status(201).json({
+           success: true,
+           events,
+         });
+       } catch (error) {
+         return next(new ErrorHandler(error, 400));
+       }
+     })
+   );
 
 // delete product of a shop
 // router.delete(
