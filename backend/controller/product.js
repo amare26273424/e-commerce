@@ -68,7 +68,6 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const product = await Product.findById(req.params.id);      
-      console.log(product)
       if (!product) {
         return next(new ErrorHandler("Product is not found with this id", 404));
       }

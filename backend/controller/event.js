@@ -49,7 +49,6 @@ router.post(
      catchAsyncErrors(async (req, res, next) => {
        try {
          const events = await Event.find({ shopId: req.params.id });
-        console.log(events)
          res.status(201).json({
            success: true,
            events,
@@ -61,34 +60,25 @@ router.post(
    );
 
 // delete product of a shop
-// router.delete(
-//   "/delete-shop-product/:id",
-//   isSeller,
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const product = await Product.findById(req.params.id);
-
-//       if (!product) {
-//         return next(new ErrorHandler("Product is not found with this id", 404));
-//       }    
-
-//       for (let i = 0; 1 < product.images.length; i++) {
-//         const result = await cloudinary.v2.uploader.destroy(
-//           product.images[i].public_id
-//         );
-//       }
-    
-//       await product.remove();
-
-//       res.status(201).json({
-//         success: true,
-//         message: "Product Deleted successfully!",
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error, 400));
-//     }
-//   })
-// );
+ router.delete(
+   "/delete-shop-event/:id",
+   isSeller,
+   catchAsyncErrors(async (req, res, next) => {
+     try {
+      const event = await Event.findOneAndDelete({ _id: req.params.id});;    
+      if (!event) {
+        return next(new ErrorHandler("event is not found with this id", 404));
+      }         
+      
+      res.status(201).json({
+        success: true,
+        message: "event Deleted successfully!",
+      });
+     } catch (error) {
+       return next(new ErrorHandler(error, 400));
+     }
+   })
+ );
 
 // get all products
  router.get(
