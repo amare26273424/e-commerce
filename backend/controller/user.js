@@ -1,48 +1,40 @@
 const express = require("express");
-const app =express();
-const path = require('path')
-const fs = require('fs')
+const app = express();
+const path = require("path");
+const fs = require("fs");
 const router = express.Router();
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendToken = require("../utils/jwtToken");
 const jwt = require("jsonwebtoken");
-const secretKey = 'PWj0fI#&2345DsZY9w$8tHe11*yr9F45K*j2xj&fceGZ!tEnMNZcEN'
-const User = require('../model/user');
-const upload  = require('../multer')
-const  sendMail = require('../utils/sendmailer')
-const {isAuthenticated} = require("../middleware/auth");
+const secretKey = "PWj0fI#&2345DsZY9w$8tHe11*yr9F45K*j2xj&fceGZ!tEnMNZcEN";
+const User = require("../model/user");
+const upload = require("../multer");
+const sendMail = require("../utils/sendmailer");
+const { isAuthenticated } = require("../middleware/auth");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const cors = require("cors");
 
 app.use(cors());
 
-
-
-
-
-
-router.post("/create-user",upload.single('file'), async (req, res, next) => {
+router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
-    const { name, email, password} = req.body;
+    const { name, email, password } = req.body;
     const avatar = req.file;
     const userEmail = await User.findOne({ email });
-   
 
-    if (userEmail) {   
-      fs.unlinkSync(path.join(__dirname, '../', avatar.path));
+    if (userEmail) {
+      fs.unlinkSync(path.join(__dirname, "../", avatar.path));
       return next(new ErrorHandler("User already exists", 400));
     }
-
-
 
     const user = {
       name: name,
       email: email,
-      password: password,    
-      avatar:avatar.filename
+      password: password,
+      avatar: avatar.filename,
     };
 
-    const activationToken =await  createActivationToken(user);
+    const activationToken = await createActivationToken(user);
 
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
@@ -71,13 +63,6 @@ const createActivationToken = (user) => {
   });
 };
 
-
-
-
-
-
-
-
 // activate user
 router.post(
   "/activation",
@@ -85,10 +70,7 @@ router.post(
     try {
       const { activation_token } = req.body;
 
-      const newUser = jwt.verify(
-        activation_token,
-        secretKey
-      );
+      const newUser = jwt.verify(activation_token, secretKey);
 
       if (!newUser) {
         return next(new ErrorHandler("Invalid token", 400));
@@ -114,9 +96,6 @@ router.post(
   })
 );
 
-
-
-
 // login user
 router.post(
   "/login-user",
@@ -129,7 +108,7 @@ router.post(
       }
 
       const user = await User.findOne({ email }).select("+password");
-   
+
       if (!user) {
         return next(new ErrorHandler("User doesn't exists!", 400));
       }
@@ -141,15 +120,12 @@ router.post(
           new ErrorHandler("Please provide the correct information", 400)
         );
       }
-    sendToken(user, 201, res);
-     
+      sendToken(user, 201, res);
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })
 );
-
-
 
 // load user
 router.get(
@@ -157,9 +133,8 @@ router.get(
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-
       const user = await User.findById(req.user.id);
-    
+
       if (!user) {
         return next(new ErrorHandler("User doesn't exists", 400));
       }
@@ -173,7 +148,6 @@ router.get(
     }
   })
 );
-
 
 // update user info
 router.put(
@@ -212,7 +186,6 @@ router.put(
   })
 );
 
-
 router.put(
   "/update-user-password",
   isAuthenticated,
@@ -242,7 +215,6 @@ router.put(
   })
 );
 
-
 // log out user
 router.get(
   "/logout",
@@ -264,25 +236,22 @@ router.get(
   })
 );
 
-
-
 // update user avatar
 router.put(
-  "/update-avatar",isAuthenticated,
-   upload.single('image'),
+  "/update-avatar",
+  isAuthenticated,
+  upload.single("image"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-
-
       let existsUser = await User.findById(req.user.id);
-      const deletePath = path.join(__dirname, '../uploads',existsUser.avatar);
+      const deletePath = path.join(__dirname, "../uploads", existsUser.avatar);
       fs.unlinkSync(deletePath);
 
       // const deletepath = `../upload/${existsUser.avatar}`
       // fs.unlinkSync(deletepath)
-      const avatar =  req.file.filename;
-      existsUser.avatar = avatar
-      await existsUser.save()
+      const avatar = req.file.filename;
+      existsUser.avatar = avatar;
+      await existsUser.save();
       // if (req.body.avatar !== "") {
       //   const imageId = existsUser.avatar.public_id;
       //   await cloudinary.v2.uploader.destroy(imageId);
@@ -310,9 +279,6 @@ router.put(
   })
 );
 
-
-
-
 // update user addresses
 router.put(
   "/update-user-addresses",
@@ -320,14 +286,11 @@ router.put(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const user = await User.findById(req.user.id);
-
       const sameTypeAddress = user.addresses.find(
         (address) => address.addressType === req.body.addressType
       );
       if (sameTypeAddress) {
-        return next(
-          new ErrorHandler(`${req.body.addressType} address already exists`)
-        );
+        return next( new ErrorHandler(`${address.addressType} address already exists`));
       }
 
       const existsAddress = user.addresses.find(
@@ -377,6 +340,5 @@ router.delete(
     }
   })
 );
-
 
 module.exports = router;
