@@ -4,6 +4,7 @@ const ErrorHandler = require("./middleware/error");
 const user = require('./controller/user')
 const admin= require('./controller/admin')
 const shop= require('./controller/shop')
+const order= require('./controller/order')
 const product= require('./controller/product')
 const event= require('./controller/event')
 const cookieParser = require("cookie-parser");
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 
 
 
-
+app.use("/api/v2/order", order);
 app.use("/api/v2/user", user);
 app.use("/api/v2/admin", admin);
 app.use("/api/v2/shop", shop);
