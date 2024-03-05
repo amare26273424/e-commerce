@@ -1,4 +1,9 @@
 
+<<<<<<< HEAD
 /backend/config/.env
 /node_modules
 /backend/uploads
+=======
+frontend/node_modules
+/node_modules
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8

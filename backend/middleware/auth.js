@@ -2,15 +2,26 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("./catchAsyncErrors");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
+<<<<<<< HEAD
 const Shop = require("../model/shop");
+=======
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 
 // const Shop = require("../model/shop");
 
 exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
     const {token} = req.cookies;
+<<<<<<< HEAD
     if(!token){
         return next(new ErrorHandler("Please login to continue", 401));
     }
+=======
+
+    if(!token){
+        return next(new ErrorHandler("Please login to continue", 401));
+    }
+
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
    
     req.user = await User.findById(decoded.id);
@@ -19,6 +30,7 @@ exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
 });
 
 
+<<<<<<< HEAD
 exports.isSeller = catchAsyncErrors(async(req,res,next) => {
     const {seller_token} = req.cookies;
 
@@ -35,6 +47,8 @@ exports.isSeller = catchAsyncErrors(async(req,res,next) => {
 
 
 
+=======
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 
 
 

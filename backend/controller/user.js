@@ -1,21 +1,36 @@
 const express = require("express");
+<<<<<<< HEAD
 const app = express();
 const path = require("path");
 const fs = require("fs");
+=======
+const app =express();
+const path = require('path')
+const fs = require('fs')
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 const router = express.Router();
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendToken = require("../utils/jwtToken");
 const jwt = require("jsonwebtoken");
+<<<<<<< HEAD
 const secretKey = "PWj0fI#&2345DsZY9w$8tHe11*yr9F45K*j2xj&fceGZ!tEnMNZcEN";
 const User = require("../model/user");
 const upload = require("../multer");
 const sendMail = require("../utils/sendmailer");
 const { isAuthenticated } = require("../middleware/auth");
+=======
+const secretKey = 'PWj0fI#&2345DsZY9w$8tHe11*yr9F45K*j2xj&fceGZ!tEnMNZcEN'
+const User = require('../model/user');
+const upload  = require('../multer')
+const  sendMail = require('../utils/sendmailer')
+const { isAuthenticated} = require("../middleware/auth");
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const cors = require("cors");
 
 app.use(cors());
 
+<<<<<<< HEAD
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -35,6 +50,35 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     };
 
     const activationToken = await createActivationToken(user);
+=======
+
+
+
+
+
+router.post("/create-user",upload.single('file'), async (req, res, next) => {
+  try {
+    const { name, email, password} = req.body;
+    const avatar = req.file;
+    const userEmail = await User.findOne({ email });
+   
+
+    if (userEmail) {   
+      fs.unlinkSync(path.join(__dirname, '../', avatar.path));
+      return next(new ErrorHandler("User already exists", 400));
+    }
+
+
+
+    const user = {
+      name: name,
+      email: email,
+      password: password,    
+      avatar:avatar.filename
+    };
+
+    const activationToken =await  createActivationToken(user);
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
@@ -63,6 +107,16 @@ const createActivationToken = (user) => {
   });
 };
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 // activate user
 router.post(
   "/activation",
@@ -70,7 +124,14 @@ router.post(
     try {
       const { activation_token } = req.body;
 
+<<<<<<< HEAD
       const newUser = jwt.verify(activation_token, secretKey);
+=======
+      const newUser = jwt.verify(
+        activation_token,
+        secretKey
+      );
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 
       if (!newUser) {
         return next(new ErrorHandler("Invalid token", 400));
@@ -96,6 +157,12 @@ router.post(
   })
 );
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 // login user
 router.post(
   "/login-user",
@@ -108,7 +175,11 @@ router.post(
       }
 
       const user = await User.findOne({ email }).select("+password");
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
       if (!user) {
         return next(new ErrorHandler("User doesn't exists!", 400));
       }
@@ -127,6 +198,11 @@ router.post(
   })
 );
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 // load user
 router.get(
   "/getuser",
@@ -149,6 +225,7 @@ router.get(
   })
 );
 
+<<<<<<< HEAD
 // update user info
 router.put(
   "/update-user-info",
@@ -215,6 +292,8 @@ router.put(
   })
 );
 
+=======
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
 // log out user
 router.get(
   "/logout",
@@ -236,6 +315,7 @@ router.get(
   })
 );
 
+<<<<<<< HEAD
 // update user avatar
 router.put(
   "/update-avatar",
@@ -342,3 +422,7 @@ router.delete(
 );
 
 module.exports = router;
+=======
+
+module.exports = router;
+>>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
