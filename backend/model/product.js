@@ -13,6 +13,26 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your product category!"],
   },
+  reviews: [
+    {
+      user: {
+        type: Object,
+      },
+      rating: {
+        type: Number,
+      },
+      comment: {
+        type: String,
+      },
+      productId: {
+        type: String,
+      },
+      createdAt:{
+        type: Date,
+        default: Date.now(),
+      }
+    },
+  ],
   tags: {
     type: String,
   },

@@ -17,7 +17,6 @@ router.post(
 
       //   group cart items by shopId
       const shopItemsMap = new Map();
-
       for (const item of cart) {
         const shopId = item.shopId;
         if (!shopItemsMap.has(shopId)) {
@@ -52,63 +51,45 @@ router.post(
 
 
 
-const CHAPA_URL = "https://api.chapa.co/v1/transaction/initialize"
-const CHAPA_AUTH = 'CHASECK_TEST-oFExyFD9t7GQn4d0B5OCoOolx0Ts0QjF' // || register to chapa and get the key
-
-
-
-// req header with chapa secret key
-const config = {
-    headers: {
-        Authorization: `Bearer ${CHAPA_AUTH}`
+// get all orders of user
+router.get(
+  "/get-all-orders/:userId",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const orders = await Order.find({ "user._id": req.params.userId }).sort({
+        createdAt: -1,
+      });
+ 
+      res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
-}
+  })
+);
 
+// get all orders of seller
+router.get(
+  "/get-seller-all-orders/:shopId",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      console.log('called')
+      const orders = await Order.find({
+        "cart.shopId": req.params.shopId,
+      }).sort({
+        createdAt: -1,
+      });
 
-
-// initial payment endpoint
-router.post("/paym", async (req, res) => {
-         // chapa redirect you to this url when payment is successful
-         const CALLBACK_URL = "http://localhost:5000/api/verify-payment/"
-        const RETURN_URL = "http://localhost:3000/order/success"
-        // a unique reference given to every transaction
-        const TEXT_REF = "tx-myecommerce12345-" + Date.now()
-        const orderData = JSON.parse(req.body.orderData);
-        console.log(orderData)
-        // form data
-        const data = {
-            amount: '50', 
-            currency: 'ETB',
-            email: 'ato@ekele.com',
-            first_name: 'ama',
-            last_name: 'Ekele',
-            tx_ref: TEXT_REF,
-            callback_url: CALLBACK_URL + TEXT_REF,
-            return_url: RETURN_URL
-        }
-        // post request to chapa
-        await axios.post(CHAPA_URL, data, config)
-            .then((response) => {
-                res.redirect(response.data.data.checkout_url)
-            })
-            .catch((err) => console.log(err))
-})
-
-// verification endpoint
-router.get("/api/verify-payment/:id", async (req, res) => {
-    
-        //verify the transaction 
-        await axios.get("https://api.chapa.co/v1/transaction/verify/" + req.params.id, config)
-            .then((response) => {
-                console.log("Payment was successfully verified")
-            }) 
-            .catch((err) => console.log("Payment can't be verfied", err))
-})
-
-// router.get("/api/payment-success", async (req, res) => {
-//     res.render("success")
-// })
-
-
+      res.status(200).json({
+        success: true,
+        orders,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
 module.exports = router;

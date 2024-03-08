@@ -1,5 +1,4 @@
 // create token and saving that in cookies
-<<<<<<< HEAD
 const jwt = require("jsonwebtoken");
 const sendToken = (user, statusCode, res) => {
     const token = user.getJwtToken();  
@@ -18,24 +17,24 @@ const sendToken = (user, statusCode, res) => {
   
   module.exports = sendToken;
   
-=======
-const sendToken = (user, statusCode, res) => {
-  const token = user.getJwtToken();
 
-  // Options for cookies
-  const options = {
-    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  };
+// const sendToken = (user, statusCode, res) => {
+//   const token = user.getJwtToken();
 
-  res.status(statusCode).cookie("token", token, options).json({
-    success: true,
-    user,
-    token,
-  });
-};
+//   // Options for cookies
+//   const options = {
+//     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+//     httpOnly: true,
+//     sameSite: "none",
+//     secure: true,
+//   };
 
-module.exports = sendToken;
->>>>>>> 0110d43682bbc4d57fcdba8b69bd17ea165a82f8
+//   res.status(statusCode).cookie("token", token, options).json({
+//     success: true,
+//     user,
+//     token,
+//   });
+// };
+
+// module.exports = sendToken;
+
